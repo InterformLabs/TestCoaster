@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interform Cocktail Bar — Drinks Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-deep: #121212;
+    --gold: #c9a96e; --gold-dim: rgba(201,169,110,0.12); --gold-line: rgba(201,169,110,0.25);
+    --white: #f0ece4; --white-dim: rgba(240,236,228,0.55);
+  }
+  html, body { width: 100%; min-height: 100%; background: var(--bg-deep); color: var(--white); font-family: 'Outfit', sans-serif; font-weight: 300; -webkit-text-size-adjust: 100%; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.6; }
+  .glow-top { position: fixed; top: -200px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(201,169,110,0.06) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+
+  .page { position: relative; z-index: 1; width: 100%; max-width: 480px; margin: 0 auto; min-height: 100vh; padding: 40px 24px 64px; }
+
+  .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; opacity: 0; animation: fadeIn 0.6s ease forwards; }
+  .back-link { display: flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); text-decoration: none; opacity: 0.85; }
+  .back-link svg { width: 14px; height: 14px; stroke: var(--gold); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .header { text-align: center; margin: 24px 0 8px; opacity: 0; animation: fadeUp 0.7s ease forwards 0.1s; }
+  .logo-mark { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; letter-spacing: 0.1em; }
+  .logo-sub { font-size: 9px; letter-spacing: 0.35em; text-transform: uppercase; color: var(--gold); margin-top: 4px; }
+  .menu-title { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; letter-spacing: 0.15em; color: var(--gold); margin-top: 18px; }
+  .gold-rule { width: 40px; height: 1px; background: var(--gold-line); margin: 20px auto 0; opacity: 0; animation: fadeIn 0.7s ease forwards 0.2s; }
+
+  /* Tab nav */
+  .tab-nav { display: flex; margin-top: 28px; border-bottom: 1px solid var(--gold-line); opacity: 0; animation: fadeUp 0.7s ease forwards 0.28s; }
+  .tab { flex: 1; text-align: center; padding: 12px 4px; font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white-dim); cursor: pointer; position: relative; -webkit-tap-highlight-color: transparent; transition: color 0.2s ease; }
+  .tab.active { color: var(--gold); }
+  .tab.active::after { content: ''; position: absolute; left: 12%; right: 12%; bottom: -1px; height: 2px; background: var(--gold); }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .section { margin-top: 34px; opacity: 0; animation: fadeUp 0.6s ease forwards; }
+  .section:first-child { margin-top: 30px; }
+
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; letter-spacing: 0.08em; color: var(--white); text-align: center; margin-bottom: 22px; position: relative; }
+  .section-title::after { content: ''; display: block; width: 24px; height: 1px; background: var(--gold-line); margin: 10px auto 0; }
+
+  .item { display: flex; justify-content: space-between; align-items: baseline; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(201,169,110,0.12); }
+  .item:last-child { border-bottom: none; }
+  .item-info { flex: 1; }
+  .item-name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 500; color: var(--white); letter-spacing: 0.02em; }
+  .item-desc { font-size: 12px; color: var(--white-dim); margin-top: 4px; line-height: 1.5; font-weight: 300; }
+  .item-price { font-family: 'Cormorant Garamond', serif; font-size: 17px; color: var(--gold); white-space: nowrap; }
+
+  .footer-note { margin-top: 48px; text-align: center; opacity: 0; animation: fadeIn 0.8s ease forwards 0.7s; }
+  .footer-note p { font-size: 10px; color: var(--white-dim); letter-spacing: 0.1em; line-height: 1.8; }
+  .powered-by { margin-top: 18px; text-align: center; opacity: 0; animation: fadeIn 0.8s ease forwards 0.8s; }
+  .powered-by a { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(201,169,110,0.25); text-decoration: none; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="glow-top"></div>
+<div class="page">
+
+  <div class="top-bar">
+    <a class="back-link" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back
+    </a>
+  </div>
+
+  <div class="header">
+    <div class="logo-mark">INTERFORM</div>
+    <div class="logo-sub">Cocktail Bar</div>
+    <div class="menu-title">Drinks Menu</div>
+  </div>
+  <div class="gold-rule"></div>
+
+  <div class="tab-nav">
+    <div class="tab active" onclick="switchTab('cocktails', this)">Cocktails</div>
+    <div class="tab" onclick="switchTab('wine', this)">Wine</div>
+    <div class="tab" onclick="switchTab('beer', this)">Beer &amp; Spirits</div>
+    <div class="tab" onclick="switchTab('na', this)">No/Low</div>
+  </div>
+
+  <!-- COCKTAILS -->
+  <div class="panel active" id="panel-cocktails">
+    <div class="section">
+      <div class="section-title">Signature Cocktails</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Gilded Old Fashioned</span>
+          <div class="item-desc">Bourbon, demerara, orange bitters, smoked cherry.</div>
+        </div>
+        <div class="item-price">$16</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Smoked Paloma</span>
+          <div class="item-desc">Mezcal, grapefruit, lime, agave, chili salt rim.</div>
+        </div>
+        <div class="item-price">$15</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Velvet Fig Sour</span>
+          <div class="item-desc">Whiskey, fig syrup, lemon, egg white, black walnut bitters.</div>
+        </div>
+        <div class="item-price">$16</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Golden Hour Spritz</span>
+          <div class="item-desc">Aperitivo, prosecco, soda, orange twist.</div>
+        </div>
+        <div class="item-price">$14</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Midnight Basil Gimlet</span>
+          <div class="item-desc">Gin, muddled basil, lime, elderflower.</div>
+        </div>
+        <div class="item-price">$15</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Classics</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Negroni</span>
+          <div class="item-desc">Gin, Campari, sweet vermouth.</div>
+        </div>
+        <div class="item-price">$14</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Espresso Martini</span>
+          <div class="item-desc">Vodka, espresso, coffee liqueur.</div>
+        </div>
+        <div class="item-price">$15</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Margarita</span>
+          <div class="item-desc">Tequila, triple sec, lime, agave.</div>
+        </div>
+        <div class="item-price">$14</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WINE -->
+  <div class="panel" id="panel-wine">
+    <div class="section">
+      <div class="section-title">White</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Sauvignon Blanc</span>
+          <div class="item-desc">Marlborough, NZ — glass / bottle</div>
+        </div>
+        <div class="item-price">$13 / $52</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Chardonnay</span>
+          <div class="item-desc">Okanagan Valley, BC — glass / bottle</div>
+        </div>
+        <div class="item-price">$14 / $56</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Pinot Grigio</span>
+          <div class="item-desc">Veneto, Italy — glass / bottle</div>
+        </div>
+        <div class="item-price">$13 / $50</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Red</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Pinot Noir</span>
+          <div class="item-desc">Willamette Valley, OR — glass / bottle</div>
+        </div>
+        <div class="item-price">$15 / $60</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Cabernet Sauvignon</span>
+          <div class="item-desc">Napa Valley, CA — glass / bottle</div>
+        </div>
+        <div class="item-price">$16 / $64</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Malbec</span>
+          <div class="item-desc">Mendoza, Argentina — glass / bottle</div>
+        </div>
+        <div class="item-price">$14 / $56</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Sparkling</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Prosecco</span>
+          <div class="item-desc">Veneto, Italy — glass / bottle</div>
+        </div>
+        <div class="item-price">$12 / $48</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Champagne</span>
+          <div class="item-desc">Champagne, France — glass / bottle</div>
+        </div>
+        <div class="item-price">$22 / $88</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEER & SPIRITS -->
+  <div class="panel" id="panel-beer">
+    <div class="section">
+      <div class="section-title">Beer &amp; Cider</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Local Pilsner</span>
+          <div class="item-desc">Crisp, light, on draft.</div>
+        </div>
+        <div class="item-price">$8</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">West Coast IPA</span>
+          <div class="item-desc">Hoppy, citrus-forward, on draft.</div>
+        </div>
+        <div class="item-price">$9</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Dry Apple Cider</span>
+          <div class="item-desc">Bottled, locally pressed.</div>
+        </div>
+        <div class="item-price">$8</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Spirits — Neat / On the Rocks</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Single Malt Scotch</span>
+          <div class="item-desc">12-year Highland.</div>
+        </div>
+        <div class="item-price">$14</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Small Batch Bourbon</span>
+          <div class="item-desc">Kentucky straight bourbon.</div>
+        </div>
+        <div class="item-price">$13</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Reposado Tequila</span>
+          <div class="item-desc">Rested in oak, agave-forward.</div>
+        </div>
+        <div class="item-price">$12</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">London Dry Gin</span>
+          <div class="item-desc">Juniper-forward, botanical.</div>
+        </div>
+        <div class="item-price">$11</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NON-ALCOHOLIC -->
+  <div class="panel" id="panel-na">
+    <div class="section">
+      <div class="section-title">No / Low</div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Sparkling Yuzu Mocktail</span>
+          <div class="item-desc">Yuzu, honey, soda, fresh mint.</div>
+        </div>
+        <div class="item-price">$8</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">House Ginger Beer</span>
+          <div class="item-desc">Fresh pressed ginger, lime.</div>
+        </div>
+        <div class="item-price">$6</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Virgin Paloma</span>
+          <div class="item-desc">Grapefruit, lime, agave, soda.</div>
+        </div>
+        <div class="item-price">$7</div>
+      </div>
+      <div class="item">
+        <div class="item-info">
+          <span class="item-name">Non-Alcoholic IPA</span>
+          <div class="item-desc">Bottled, hop-forward, 0.5% ABV.</div>
+        </div>
+        <div class="item-price">$7</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <p>Please drink responsibly.<br>Ask your server about tonight's features.</p>
+  </div>
+
+  <div class="powered-by">
+    <a href="https://interformlabs.com" target="_blank">interformlabs.com</a>
+  </div>
+
+</div>
+
+<script>
+  function switchTab(name, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('panel-' + name).classList.add('active');
+  }
+</script>
+</body>
+</html>
