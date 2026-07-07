@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interform Cocktail Bar — Feedback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400&family=Outfit:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg-deep: #121212; --bg: #1a1a1a;
+    --gold: #c9a96e; --gold-dim: rgba(201,169,110,0.12); --gold-line: rgba(201,169,110,0.28);
+    --white: #f0ece4; --mid: rgba(240,236,228,0.45); --faint: rgba(240,236,228,0.12);
+    --red: #c45a5a;
+  }
+  html, body { width: 100%; min-height: 100%; background: var(--bg-deep); color: var(--white); font-family: 'Outfit', sans-serif; font-weight: 300; -webkit-text-size-adjust: 100%; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 999; opacity: 0.6; }
+  .glow { position: fixed; top: -180px; left: 50%; transform: translateX(-50%); width: 100%; max-width: 500px; height: 380px; background: radial-gradient(ellipse, rgba(201,169,110,0.06) 0%, transparent 70%); pointer-events: none; z-index: 0; }
+  .page { position: relative; z-index: 1; width: 100%; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 20px; }
+  .card { width: 100%; max-width: 420px; background: rgba(24,24,24,0.9); border: 1px solid rgba(201,169,110,0.15); padding: 32px 24px 28px; opacity: 0; animation: fadeUp 0.6s ease forwards 0.2s; }
+  .card-header { display: flex; align-items: center; justify-content: center; margin-bottom: 20px; padding-bottom: 18px; border-bottom: 1px solid rgba(201,169,110,0.12); }
+  .logo-mark { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 400; letter-spacing: 0.1em; text-align: center; }
+  .logo-sub { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); text-align: center; margin-top: 4px; }
+  .restaurant-label { font-family: 'Cormorant Garamond', serif; font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .restaurant-label::before { content: ''; width: 20px; height: 1px; background: var(--gold-line); }
+  .stars-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; }
+  .stars { display: flex; gap: 6px; margin-bottom: 8px; }
+  .star { font-size: 36px; cursor: pointer; color: rgba(255,255,255,0.12); transition: color 0.15s ease, transform 0.15s ease; -webkit-tap-highlight-color: transparent; user-select: none; line-height: 1; }
+  .star.active { color: #FBBC04; }
+  .star:hover { transform: scale(1.15); }
+  .stars-hint { font-size: 11px; color: var(--mid); letter-spacing: 0.05em; margin-bottom: 24px; min-height: 16px; transition: color 0.2s; }
+  .stars-hint.filled { color: var(--gold); }
+  .cat-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .chip { padding: 7px 14px; border: 1px solid rgba(201,169,110,0.2); background: transparent; color: var(--mid); font-family: 'Outfit', sans-serif; font-size: 12px; letter-spacing: 0.08em; cursor: pointer; transition: border-color 0.2s, color 0.2s, background 0.2s; -webkit-tap-highlight-color: transparent; border-radius: 2px; }
+  .chip:hover { border-color: var(--gold-line); color: var(--white); }
+  .chip.selected { border-color: var(--gold); background: var(--gold-dim); color: var(--gold); }
+  .comment-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); margin-bottom: 10px; }
+  textarea { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.15); color: var(--white); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 300; line-height: 1.6; padding: 14px 16px; resize: none; height: 110px; outline: none; transition: border-color 0.2s; margin-bottom: 24px; }
+  textarea::placeholder { color: rgba(240,236,228,0.2); }
+  textarea:focus { border-color: var(--gold-line); }
+  .contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 24px; }
+  .contact-field { display: flex; flex-direction: column; gap: 6px; }
+  .contact-label { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); }
+  .contact-label span { font-size: 10px; color: rgba(240,236,228,0.2); text-transform: none; margin-left: 4px; letter-spacing: 0.05em; }
+  .contact-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(201,169,110,0.15); color: var(--white); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 300; padding: 12px 14px; outline: none; transition: border-color 0.2s; width: 100%; }
+  .contact-input::placeholder { color: rgba(240,236,228,0.18); }
+  .contact-input:focus { border-color: var(--gold-line); }
+  .submit-btn { width: 100%; padding: 16px; background: var(--gold); color: #121212; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; border: none; cursor: pointer; transition: background 0.25s, transform 0.2s; }
+  .submit-btn:hover { background: #d4b47a; transform: translateY(-1px); }
+  .submit-btn:active { transform: scale(0.98); }
+  .submit-btn:disabled { background: rgba(201,169,110,0.3); color: rgba(18,18,18,0.5); cursor: not-allowed; transform: none; }
+  .error-msg { font-size: 12px; color: var(--red); letter-spacing: 0.05em; margin-bottom: 12px; display: none; }
+  .error-msg.show { display: block; }
+  .card-footer { margin-top: 20px; text-align: center; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(201,169,110,0.25); opacity: 0; animation: fadeIn 0.6s ease forwards 0.7s; }
+  .success { position: fixed; inset: 0; background: var(--bg-deep); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 40px; text-align: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+  .success.visible { opacity: 1; pointer-events: all; }
+  .success-icon { font-size: 40px; margin-bottom: 8px; color: var(--gold); }
+  .success h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(28px, 7vw, 44px); font-weight: 300; color: var(--white); letter-spacing: 0.02em; }
+  .success p { font-size: 13px; color: rgba(240,236,228,0.4); letter-spacing: 0.08em; max-width: 280px; line-height: 1.7; }
+  .success-line { width: 40px; height: 1px; background: var(--gold-line); margin: 4px auto; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="page">
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="logo-mark">INTERFORM</div>
+        <div class="logo-sub">Cocktail Bar</div>
+      </div>
+    </div>
+    <div class="restaurant-label">Interform Cocktail Bar</div>
+    <div class="stars-label">Your rating</div>
+    <div class="stars" id="stars">
+      <span class="star" data-val="1">★</span>
+      <span class="star" data-val="2">★</span>
+      <span class="star" data-val="3">★</span>
+      <span class="star" data-val="4">★</span>
+      <span class="star" data-val="5">★</span>
+    </div>
+    <div class="stars-hint" id="starsHint">Tap a star to rate</div>
+    <div class="cat-label">What can we improve?</div>
+    <div class="chips" id="chips">
+      <button class="chip" data-cat="Food">Food</button>
+      <button class="chip" data-cat="Service">Service</button>
+      <button class="chip" data-cat="Atmosphere">Atmosphere</button>
+      <button class="chip" data-cat="Wait time">Wait time</button>
+      <button class="chip" data-cat="Other">Other</button>
+    </div>
+    <div class="comment-label">Tell us more</div>
+    <textarea id="comment" placeholder="What could we have done better? Your feedback goes directly to our manager…"></textarea>
+    <div class="contact-wrap">
+      <div class="contact-field">
+        <label class="contact-label" for="email">Email <span>optional</span></label>
+        <input class="contact-input" type="email" id="email" placeholder="your@email.com" autocomplete="email">
+      </div>
+      <div class="contact-field">
+        <label class="contact-label" for="phone">Phone <span>optional</span></label>
+        <input class="contact-input" type="tel" id="phone" placeholder="+1 604…" autocomplete="tel">
+      </div>
+    </div>
+    <div class="error-msg" id="errorMsg">Please select a star rating before submitting.</div>
+    <button class="submit-btn" id="submitBtn" onclick="submitReview()">Submit Feedback</button>
+  </div>
+  <div class="card-footer">Powered by Interform · interformlabs.com</div>
+</div>
+<div class="success" id="successScreen">
+  <div class="success-icon">✦</div>
+  <h2>Thank you<br>for your feedback</h2>
+  <div class="success-line"></div>
+  <p>Your feedback has been sent directly to our manager. We appreciate you helping us improve.</p>
+  <a href="index.html" style="margin-top:24px; font-size:10px; letter-spacing:0.25em; text-transform:uppercase; color:rgba(201,169,110,0.4); text-decoration:none;">← Back to menu</a>
+</div>
+<script>
+  // DEMO ONLY — no live backend connected.
+  // Production version posts `payload` to Supabase (`reviews` table) and, for
+  // low ratings, triggers a Make.com webhook that fires an SMS to the
+  // manager on shift — same pattern as the Plume build.
+  const SMS_THRESHOLD = 3;
+
+  let selectedRating = 0;
+  const starLabels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+
+  document.querySelectorAll('.star').forEach(star => {
+    star.addEventListener('click', function() {
+      selectedRating = parseInt(this.dataset.val);
+      updateStars(selectedRating);
+      document.getElementById('errorMsg').classList.remove('show');
+    });
+    star.addEventListener('mouseover', function() { updateStars(parseInt(this.dataset.val), true); });
+  });
+  document.getElementById('stars').addEventListener('mouseleave', function() { updateStars(selectedRating); });
+
+  function updateStars(val) {
+    document.querySelectorAll('.star').forEach(s => { s.classList.toggle('active', parseInt(s.dataset.val) <= val); });
+    const hint = document.getElementById('starsHint');
+    if (val > 0) { hint.textContent = starLabels[val]; hint.classList.add('filled'); }
+    else { hint.textContent = 'Tap a star to rate'; hint.classList.remove('filled'); }
+  }
+
+  document.querySelectorAll('.chip').forEach(chip => { chip.addEventListener('click', function() { this.classList.toggle('selected'); }); });
+
+  function hasRecentSubmission() {
+    const last = localStorage.getItem('interform_feedback_sent');
+    if (!last) return false;
+    return (Date.now() - parseInt(last)) < 24 * 60 * 60 * 1000;
+  }
+
+  function submitReview() {
+    if (hasRecentSubmission()) {
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.textContent = 'Already submitted today';
+      return;
+    }
+    if (selectedRating === 0) { document.getElementById('errorMsg').classList.add('show'); return; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.textContent = 'Sending…';
+
+    const selectedChips = [...document.querySelectorAll('.chip.selected')].map(c => c.dataset.cat);
+    const payload = {
+      rating: selectedRating,
+      category: selectedChips.length > 0 ? selectedChips.join(', ') : null,
+      comment: document.getElementById('comment').value.trim() || null,
+      email: document.getElementById('email').value.trim() || null,
+      phone: document.getElementById('phone').value.trim() || null,
+    };
+    console.log('Demo feedback submission (not sent anywhere):', payload);
+
+    // Simulate the network round-trip so the interaction feels real.
+    setTimeout(() => {
+      localStorage.setItem('interform_feedback_sent', Date.now().toString());
+      document.getElementById('successScreen').classList.add('visible');
+    }, 500);
+  }
+</script>
+</body>
+</html>
